@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-flask-app
+  labels:
+    app: python-flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-flask-app
+  template:
+    metadata:
+      labels:
+        app: python-flask-app
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: node02  # Assurez-vous que ce label existe sur le nœud
+      containers:
+      - name: python-flask-container
+        image: beups/python_flask:latest  # Utilisez la version correcte de votre image
+        ports:
+        - containerPort: 5000  # Assurez-vous que le conteneur expose le port 5000 ou celui que vous utilisez dans votre application
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-flask-service
+spec:
+  selector:
+    app: python-flask-app
+  ports:
+    - protocol: TCP
+      port: 5000  # Port exposé par le conteneur
+      targetPort: 5000  # Port du conteneur
+      nodePort: 32004  # Port externe pour accéder à l'application
+  type: NodePort
