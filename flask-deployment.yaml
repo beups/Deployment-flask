@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: python-flask-app
+  namespace: devops-tools  # Ajout du namespace correct
   labels:
     app: python-flask-app
 spec:
@@ -19,6 +20,7 @@ spec:
       containers:
       - name: python-flask-container
         image: beups/python_flask:latest  # Utilisez la version correcte de votre image
+        imagePullPolicy: Always  # Force Kubernetes à récupérer la dernière version de l'image
         ports:
         - containerPort: 5000  # Assurez-vous que le conteneur expose le port 5000 ou celui que vous utilisez dans votre application
 ---
@@ -26,6 +28,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: python-flask-service
+  namespace: devops-tools  # Ajout du namespace correct
 spec:
   selector:
     app: python-flask-app
