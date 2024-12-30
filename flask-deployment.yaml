@@ -2,9 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: python-flask-app
-  namespace: devops-tools  # Ajout du namespace correct
+  namespace: devops-tools  # Assurez-vous que le namespace correspond
   labels:
     app: python-flask-app
+    app.kubernetes.io/instance: python-flask  # Label ajouté pour correspondre au desired manifest
 spec:
   replicas: 1
   selector:
@@ -16,25 +17,25 @@ spec:
         app: python-flask-app
     spec:
       nodeSelector:
-        kubernetes.io/hostname: node02  # Assurez-vous que ce label existe sur le nœud
+        kubernetes.io/hostname: node02  # Corrigé : placé au bon niveau
       containers:
       - name: python-flask-container
-        image: beups/python_flask:latest  # Utilisez la version correcte de votre image
-        imagePullPolicy: Always  # Force Kubernetes à récupérer la dernière version de l'image
+        image: beups/python_flask:latest
+        imagePullPolicy: Always
         ports:
-        - containerPort: 5000  # Assurez-vous que le conteneur expose le port 5000 ou celui que vous utilisez dans votre application
+        - containerPort: 5000
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: python-flask-service
-  namespace: devops-tools  # Ajout du namespace correct
+  namespace: devops-tools  # Namespace explicitement mentionné
 spec:
   selector:
     app: python-flask-app
   ports:
     - protocol: TCP
-      port: 5000  # Port exposé par le conteneur
-      targetPort: 5000  # Port du conteneur
-      nodePort: 32004  # Port externe pour accéder à l'application
+      port: 5000
+      targetPort: 5000
+      nodePort: 32004
   type: NodePort
