@@ -20,7 +20,7 @@ spec:
         kubernetes.io/hostname: node01  # Corrigé : placé au bon niveau
       containers:
       - name: python-flask-container
-        image: beups/python_flask:latest
+        image: beups/python_flask:1.0.0
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
